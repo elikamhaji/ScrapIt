@@ -1,93 +1,80 @@
-const karats = [
-    { label: "10k", purity: 0.41 },
-    { label: "14k", purity: 0.575 },
-    { label: "18k", purity: 0.735 },
-    { label: "85%", purity: 0.85 },
-    { label: "87%", purity: 0.87 },
-    { label: "90%", purity: 0.90 },
-    { label: "91%", purity: 0.91 },
-    { label: "92%", purity: 0.92 },
-    { label: "93%", purity: 0.93 },
-    { label: "95%", purity: 0.95 },
-    { label: "99%", purity: 0.99 }
-];
+function calculatePrices() {
+    const ounceInput = document.getElementById("ounceInput").value;
+    const discountInput = document.getElementById("discountInput").value;
 
-document.getElementById("fetchBtn").addEventListener("click", fetchPrice);
+    const ounce = parseFloat(ounceInput);
+    const discount = parseFloat(discountInput);
 
-async function fetchPrice() {
-    try {
-        const res = await fetch("https://api.gold-api.com/price/XAU");
-        const data = await res.json();
-        document.getElementById("goldPrice").value = data.price.toFixed(2);
-        updateList();
-    } catch (e) {
-        console.log("Error fetching gold price:", e);
+    const resultsList = document.getElementById("resultsList");
+    const refDisplay = document.getElementById("refDisplay");
+
+    resultsList.innerHTML = "";
+
+    if (isNaN(ounce) || isNaN(discount)) {
+        return;
     }
-}
 
-function updateList() {
-    const oz = parseFloat(document.getElementById("goldPrice").value);
-    const discount = parseFloat(document.getElementById("discount").value) / 100;
-    if (!oz) return;
-
-    const gramBase = oz / 31.1035;
-    const list = document.getElementById("priceList");
-    list.innerHTML = "";
+    const karats = [
+        { label: "10k", value: 0.4167 },
+        { label: "14k", value: 0.585 },
+        { label: "18k", value: 0.75 },
+        { label: "85%", value: 0.85 },
+        { label: "87%", value: 0.87 },
+        { label: "90%", value: 0.90 },
+        { label: "91%", value: 0.91 },
+        { label: "92%", value: 0.92 },
+        { label: "93%", value: 0.93 },
+        { label: "95%", value: 0.95 },
+        { label: "99%", value: 0.99 }
+    ];
 
     karats.forEach(k => {
-        const perGram = (gramBase * k.purity * discount).toFixed(2);
-        const row = document.createElement("div");
-        row.className = "row";
-        row.innerHTML = `<span>${k.label}</span><span>$${perGram}</span>`;
-        list.appendChild(row);
+        const price = (ounce * k.value) * (1 - discount / 100);
+        const li = document.createElement("li");
+
+        li.innerHTML = `
+            <span class="karat">${k.label}</span>
+            <span class="price">$${price.toFixed(2)}</span>
+        `;
+
+        resultsList.appendChild(li);
     });
-    const refDiv=document.createElement('div');
-    refDiv.className='row refRow';
-    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
-    refDiv.innerHTML = `<span>${val}</span>`;
-    list.appendChild(refDiv);
+
+    // --- REF LOGIC ---
+    // Option A — Full reference on bottom left
+    const rawOunce = Math.round(ounce);                      
+    const modifiedDiscount = Math.round(discount - 30);      
+    const refCode = `Ref#${rawOunce}${modifiedDiscount}`;
+
+    refDisplay.innerText = refCode;
 }
 
-document.getElementById("goldPrice").addEventListener("input", updateList);
-document.getElementById("discount").addEventListener("input", updateList);
 
-document.getElementById("shareBtn").addEventListener("click", async () => {
-    const card = document.getElementById("priceCard");
+// SHARE FUNCTION
+function sharePrices() {
+    const captureElement = document.querySelector(".results-box");
 
-    try {
-        const canvas = await html2canvas(card, { scale: 3 });
-        canvas.toBlob(async (blob) => {
+    html2canvas(captureElement, { scale: 3 }).then(canvas => {
+        canvas.toBlob(blob => {
             const file = new File([blob], "gold-prices.png", { type: "image/png" });
 
-            try {
-                await navigator.share({
-                    files: [file]
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({
+                    files: [file],
+                    title: "Gold Prices",
                 });
-    const refDiv=document.createElement('div');
-    refDiv.className='row refRow';
-    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
-    refDiv.innerHTML = `<span>${val}</span>`;
-    list.appendChild(refDiv);
-            } catch {
+            } else {
                 const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
+                link.href = canvas.toDataURL();
                 link.download = "gold-prices.png";
                 link.click();
             }
         });
-    const refDiv=document.createElement('div');
-    refDiv.className='row refRow';
-    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
-    refDiv.innerHTML = `<span>${val}</span>`;
-    list.appendChild(refDiv);
-    } catch (e) {
-        console.log("share error", e);
-    }
-});
-    const refDiv=document.createElement('div');
-    refDiv.className='row refRow';
-    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
-    refDiv.innerHTML = `<span>${val}</span>`;
-    list.appendChild(refDiv);
+    });
+}
 
-fetchPrice();
+
+// --- AUTO-CALCULATE ON PAGE LOAD ---
+window.addEventListener("load", () => {
+    calculatePrices();
+});
