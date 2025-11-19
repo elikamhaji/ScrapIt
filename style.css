@@ -1,119 +1,77 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f8cb00;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+    padding: 0;
+    background: #0c0c0c;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    color: white;
 }
 
 .wrapper {
-    width: 400px;
-    background: #fff3c4;
+    max-width: 430px;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-    position: relative;
+    margin: auto;
 }
 
-h2 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 22px;
-    color: #333;
+h1 {
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-.topSection {
-    background: white;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 18px;
+.card {
+    background: #141414;
+    padding: 22px;
+    border-radius: 26px;
+    box-shadow: 0 0 45px rgba(0,0,0,0.4);
+    margin-bottom: 22px;
+}
+
+label {
+    font-size: 15px;
+    opacity: 0.9;
+}
+
+input {
+    width: 100%;
+    margin: 10px 0 18px;
+    padding: 14px;
+    border: none;
+    border-radius: 18px;
+    background: #1e1e1e;
+    color: white;
+    font-size: 17px;
+}
+
+.btn-row {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 18px;
+    background: #2d4f81;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+    padding: 14px 4px;
+    font-size: 18px;
+    border-bottom: 1px solid #2a2a2a;
 }
 
-.row label {
-    font-size: 14px;
+.row:last-child {
+    border-bottom: none;
 }
 
-.row input {
-    width: 150px;
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    font-size: 16px;
-    background: #d4af37;
-    border: none;
-    border-radius: 8px;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #b9972d;
-}
-
-.priceBox {
-    background: white;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 18px;
-}
-
-.priceBox div {
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-
-.goldList {
-    background: white;
-    padding: 12px;
-    border-radius: 10px;
-}
-
-.goldList div {
-    font-size: 15px;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 6px 0;
-}
-
-#shareImageWrapper {
-    width: 100%;
-    position: relative;
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-}
-
-.hiddenCanvas {
-    display: none;
-}
-
-/* -------------------------------- */
-/*     UPDATED REF TEXT (BIGGER)     */
-/* -------------------------------- */
-
-#refBox {
-    position: absolute;
-    bottom: 10px;
-    left: 12px;
-    font-size: 13.5px;      /* Slightly larger */
-    font-weight: 500;       /* More readable */
-    color: rgba(0, 0, 0, 0.42); /* Slightly more contrast */
+.refRow {
+    padding-top: 10px;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: left;
 }
