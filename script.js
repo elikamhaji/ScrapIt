@@ -41,6 +41,11 @@ function updateList() {
         row.innerHTML = `<span>${k.label}</span><span>$${perGram}</span>`;
         list.appendChild(row);
     });
+    const refDiv=document.createElement('div');
+    refDiv.className='row refRow';
+    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
+    refDiv.innerHTML = `<span>${val}</span>`;
+    list.appendChild(refDiv);
 }
 
 document.getElementById("goldPrice").addEventListener("input", updateList);
@@ -58,6 +63,11 @@ document.getElementById("shareBtn").addEventListener("click", async () => {
                 await navigator.share({
                     files: [file]
                 });
+    const refDiv=document.createElement('div');
+    refDiv.className='row refRow';
+    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
+    refDiv.innerHTML = `<span>${val}</span>`;
+    list.appendChild(refDiv);
             } catch {
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
@@ -65,9 +75,19 @@ document.getElementById("shareBtn").addEventListener("click", async () => {
                 link.click();
             }
         });
+    const refDiv=document.createElement('div');
+    refDiv.className='row refRow';
+    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
+    refDiv.innerHTML = `<span>${val}</span>`;
+    list.appendChild(refDiv);
     } catch (e) {
         console.log("share error", e);
     }
 });
+    const refDiv=document.createElement('div');
+    refDiv.className='row refRow';
+    const val = 'Ref#' + ('9' + Math.floor(oz) + Math.floor((discount*100)-30));
+    refDiv.innerHTML = `<span>${val}</span>`;
+    list.appendChild(refDiv);
 
 fetchPrice();

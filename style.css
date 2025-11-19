@@ -68,3 +68,5 @@ button {
 .row:last-child {
     border-bottom: none;
 }
+
+.refRow span{font-size:12px;opacity:0.5;}
