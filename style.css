@@ -69,4 +69,9 @@ button {
     border-bottom: none;
 }
 
-.refRow span{font-size:12px;opacity:0.5;}
+.refRow {
+    padding-top: 10px;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: left;
+}
