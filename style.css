@@ -1,77 +1,69 @@
 body {
-    margin: 0;
-    padding: 0;
-    background: #0c0c0c;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    color: white;
+  background: #000;
+  color: #fff;
+  font-family: system-ui, sans-serif;
 }
 
-.wrapper {
-    max-width: 430px;
-    padding: 20px;
-    margin: auto;
+.container {
+  max-width: 420px;
+  margin: 40px auto;
 }
 
-h1 {
-    font-weight: 600;
-    margin-bottom: 20px;
+input, textarea {
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px;
+  border: none;
+  margin-bottom: 12px;
 }
 
-.card {
-    background: #141414;
-    padding: 22px;
-    border-radius: 26px;
-    box-shadow: 0 0 45px rgba(0,0,0,0.4);
-    margin-bottom: 22px;
+.quick-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-label {
-    font-size: 15px;
-    opacity: 0.9;
+.quick-buttons button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 14px;
+  border: none;
+  background: #333;
+  color: #fff;
 }
 
-input {
-    width: 100%;
-    margin: 10px 0 18px;
-    padding: 14px;
-    border: none;
-    border-radius: 18px;
-    background: #1e1e1e;
-    color: white;
-    font-size: 17px;
+.private-notes {
+  background: #111;
+  color: #aaa;
+  min-height: 60px;
 }
 
-.btn-row {
-    display: flex;
-    gap: 10px;
-}
-
-button {
-    flex: 1;
-    padding: 14px;
-    border: none;
-    border-radius: 18px;
-    background: #2d4f81;
-    color: white;
-    font-size: 16px;
-    font-weight: 500;
+#priceCard {
+  background: #111;
+  padding: 16px;
+  border-radius: 18px;
 }
 
 .row {
-    display: flex;
-    justify-content: space-between;
-    padding: 14px 4px;
-    font-size: 18px;
-    border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
-.row:last-child {
-    border-bottom: none;
+#refDisplay {
+  font-size: 14px;
+  margin-top: 10px;
+  opacity: 0.7;
 }
 
-.refRow {
-    padding-top: 10px;
-    font-size: 16px;
-    opacity: 0.8;
-    text-align: left;
+#shareBtn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 18px;
+  border: none;
+  background: gold;
+  color: #000;
+  font-weight: bold;
 }
