@@ -74,3 +74,13 @@ async function shareImage() {
 }
 
 fetchPrice();
+
+// Quick discount buttons
+document.querySelectorAll(".disc-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const val = btn.getAttribute("data-val");
+    document.getElementById("discount").value = val;
+    updateList(); // same function you already use
+  });
+});
+
