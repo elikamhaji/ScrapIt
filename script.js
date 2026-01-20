@@ -54,41 +54,33 @@ function updateList() {
     refDisplay.innerText = refCode;
 }
 
-/* ================= SHARE IMAGE (WHATSAPP-FIRST) ================= */
-
 async function shareImage() {
     const card = document.getElementById("priceCard");
+
     const canvas = await html2canvas(card, { scale: 3 });
 
-    canvas.toBlob(blob => {
-        if (!blob) return;
-
+    canvas.toBlob(async (blob) => {
         const file = new File([blob], "gold-prices.png", { type: "image/png" });
 
-        // 📱 Mobile → go straight to WhatsApp via native share
-        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({ files: [file] });
-                return;
-            }
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file] });
+        } else {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL();
+            link.download = "gold-prices.png";
+            link.click();
         }
-
-        // 💻 Desktop fallback → download image
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "gold-prices.png";
-        link.click();
     });
 }
 
 fetchPrice();
 
-/* ================= QUICK DISCOUNT BUTTONS ================= */
-
+// Quick discount buttons
 document.querySelectorAll(".disc-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const val = btn.getAttribute("data-val");
-        document.getElementById("discount").value = val;
-        updateList();
-    });
+  btn.addEventListener("click", () => {
+    const val = btn.getAttribute("data-val");
+    document.getElementById("discount").value = val;
+    updateList(); // same function you already use
+  });
 });
+
