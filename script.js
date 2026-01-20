@@ -12,42 +12,32 @@ const karats = [
     { label: "99%", purity: 0.99 }
 ];
 
-const goldPriceInput = document.getElementById("goldPrice");
-const discountInput = document.getElementById("discount");
-const fetchBtn = document.getElementById("fetchBtn");
-const shareBtn = document.getElementById("shareBtn");
+document.getElementById("fetchBtn").addEventListener("click", fetchPrice);
+document.getElementById("shareBtn").addEventListener("click", shareImage);
 
-const priceList = document.getElementById("priceList");
-const refDisplay = document.getElementById("refDisplay");
-const priceCard = document.getElementById("priceCard");
-
-/* ================= FETCH GOLD PRICE ================= */
-
-fetchBtn.addEventListener("click", fetchPrice);
+document.getElementById("goldPrice").addEventListener("input", updateList);
+document.getElementById("discount").addEventListener("input", updateList);
 
 async function fetchPrice() {
     try {
         const res = await fetch("https://api.gold-api.com/price/XAU");
         const data = await res.json();
-        goldPriceInput.value = data.price.toFixed(2);
+        document.getElementById("goldPrice").value = data.price.toFixed(2);
         updateList();
     } catch (e) {
-        console.log("Error fetching gold price", e);
+        console.log("fetch error", e);
     }
 }
 
-/* ================= UPDATE PRICE LIST ================= */
-
-goldPriceInput.addEventListener("input", updateList);
-discountInput.addEventListener("input", updateList);
-
 function updateList() {
-    const oz = parseFloat(goldPriceInput.value);
-    const discount = parseFloat(discountInput.value);
+    const oz = parseFloat(document.getElementById("goldPrice").value);
+    const discount = parseFloat(document.getElementById("discount").value);
+    const list = document.getElementById("priceList");
+    const refDisplay = document.getElementById("refDisplay");
 
     if (!oz || !discount) return;
 
-    priceList.innerHTML = "";
+    list.innerHTML = "";
 
     const gramBase = oz / 31.1035;
     const pct = discount / 100;
@@ -57,50 +47,40 @@ function updateList() {
         const row = document.createElement("div");
         row.className = "row";
         row.innerHTML = `<span>${k.label}</span><span>$${perGram}</span>`;
-        priceList.appendChild(row);
+        list.appendChild(row);
     });
 
-    // REF code (internal use)
     const refCode = `Ref#9${Math.floor(oz)}${Math.floor(discount - 30)}`;
-    refDisplay.textContent = refCode;
+    refDisplay.innerText = refCode;
 }
-
-/* ================= QUICK % BUTTONS ================= */
-
-document.querySelectorAll(".disc-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        discountInput.value = btn.dataset.val;
-        updateList();
-    });
-});
-
-/* ================= SHARE IMAGE (WHATSAPP FIRST) ================= */
-
-shareBtn.addEventListener("click", shareImage);
 
 async function shareImage() {
-    const canvas = await html2canvas(priceCard, { scale: 3 });
+    const card = document.getElementById("priceCard");
 
-    canvas.toBlob(blob => {
-        if (!blob) return;
+    const canvas = await html2canvas(card, { scale: 3 });
 
+    canvas.toBlob(async (blob) => {
         const file = new File([blob], "gold-prices.png", { type: "image/png" });
 
-        // Mobile → go straight to WhatsApp via native share
-        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                navigator.share({
-                    files: [file],
-                    title: "Gold Prices"
-                });
-                return;
-            }
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file] });
+        } else {
+            const link = document.createElement("a");
+            link.href = canvas.toDataURL();
+            link.download = "gold-prices.png";
+            link.click();
         }
-
-        // Desktop fallback → download image
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "gold-prices.png";
-        link.click();
     });
 }
+
+fetchPrice();
+
+// Quick discount buttons
+document.querySelectorAll(".disc-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const val = btn.getAttribute("data-val");
+    document.getElementById("discount").value = val;
+    updateList(); // same function you already use
+  });
+});
+
