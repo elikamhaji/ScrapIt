@@ -41,8 +41,7 @@ input {
     font-size: 17px;
 }
 
-/* ===== QUICK DISCOUNT BUTTONS ===== */
-
+/* QUICK DISCOUNT BUTTONS */
 .quick-discounts {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -60,7 +59,6 @@ input {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .disc-btn:hover {
@@ -71,8 +69,7 @@ input {
     transform: scale(0.96);
 }
 
-/* ===== MAIN BUTTONS ===== */
-
+/* MAIN BUTTONS */
 .btn-row {
     display: flex;
     gap: 10px;
@@ -89,8 +86,7 @@ button {
     font-weight: 500;
 }
 
-/* ===== PRICE LIST ===== */
-
+/* PRICE LIST */
 .row {
     display: flex;
     justify-content: space-between;
@@ -103,8 +99,7 @@ button {
     border-bottom: none;
 }
 
-/* ===== REF CODE ===== */
-
+/* REF + TIME */
 .refRow {
     padding-top: 10px;
     font-size: 16px;
