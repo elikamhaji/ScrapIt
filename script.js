@@ -18,12 +18,30 @@ document.getElementById("shareBtn").addEventListener("click", shareImage);
 document.getElementById("goldPrice").addEventListener("input", updateList);
 document.getElementById("discount").addEventListener("input", updateList);
 
+// Timestamp formatter
+function getFormattedTimestamp() {
+    const now = new Date();
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear().toString().slice(-2);
+
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${day}/${month}/${year}   ${hours}:${minutes} ${ampm}`;
+}
+
 async function fetchPrice() {
     try {
         const res = await fetch("https://api.gold-api.com/price/XAU");
         const data = await res.json();
         document.getElementById("goldPrice").value = data.price.toFixed(2);
         updateList();
+
+        // set timestamp ONLY when price is fetched
+        document.getElementById("timeStamp").innerText = getFormattedTimestamp();
     } catch (e) {
         console.log("fetch error", e);
     }
@@ -54,33 +72,37 @@ function updateList() {
     refDisplay.innerText = refCode;
 }
 
+// Quick discount buttons
+document.querySelectorAll(".disc-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.getElementById("discount").value = btn.dataset.val;
+        updateList();
+    });
+});
+
+// Share (WhatsApp-first)
 async function shareImage() {
     const card = document.getElementById("priceCard");
-
     const canvas = await html2canvas(card, { scale: 3 });
 
-    canvas.toBlob(async (blob) => {
+    canvas.toBlob(blob => {
+        if (!blob) return;
+
         const file = new File([blob], "gold-prices.png", { type: "image/png" });
 
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file] });
-        } else {
-            const link = document.createElement("a");
-            link.href = canvas.toDataURL();
-            link.download = "gold-prices.png";
-            link.click();
+        if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                navigator.share({ files: [file] });
+                return;
+            }
         }
+
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "gold-prices.png";
+        link.click();
     });
 }
 
+// Auto fetch on load
 fetchPrice();
-
-// Quick discount buttons
-document.querySelectorAll(".disc-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const val = btn.getAttribute("data-val");
-    document.getElementById("discount").value = val;
-    updateList(); // same function you already use
-  });
-});
-
