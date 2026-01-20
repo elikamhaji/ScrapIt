@@ -18,34 +18,52 @@ document.getElementById("shareBtn").addEventListener("click", shareImage);
 document.getElementById("goldPrice").addEventListener("input", updateList);
 document.getElementById("discount").addEventListener("input", updateList);
 
-// Timestamp formatter
+/* ================= PANAMA TIMESTAMP ================= */
+
 function getFormattedTimestamp() {
     const now = new Date();
-    const day = now.getDate();
-    const month = now.getMonth() + 1;
-    const year = now.getFullYear().toString().slice(-2);
 
-    let hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "America/Panama",
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    });
 
-    return `${day}/${month}/${year}   ${hours}:${minutes} ${ampm}`;
+    const parts = formatter.formatToParts(now);
+
+    const day = parts.find(p => p.type === "day").value;
+    const month = parts.find(p => p.type === "month").value;
+    const year = parts.find(p => p.type === "year").value;
+    const hour = parts.find(p => p.type === "hour").value;
+    const minute = parts.find(p => p.type === "minute").value;
+    const period = parts.find(p => p.type === "dayPeriod").value.toUpperCase();
+
+    return `${day}/${month}/${year}   ${hour}:${minute} ${period}`;
 }
+
+/* ================= FETCH GOLD PRICE ================= */
 
 async function fetchPrice() {
     try {
         const res = await fetch("https://api.gold-api.com/price/XAU");
         const data = await res.json();
+
         document.getElementById("goldPrice").value = data.price.toFixed(2);
         updateList();
 
-        // set timestamp ONLY when price is fetched
+        // Timestamp updates ONLY when price is fetched
         document.getElementById("timeStamp").innerText = getFormattedTimestamp();
+
     } catch (e) {
         console.log("fetch error", e);
     }
 }
+
+/* ================= PRICE CALCULATION ================= */
 
 function updateList() {
     const oz = parseFloat(document.getElementById("goldPrice").value);
@@ -72,7 +90,8 @@ function updateList() {
     refDisplay.innerText = refCode;
 }
 
-// Quick discount buttons
+/* ================= QUICK % BUTTONS ================= */
+
 document.querySelectorAll(".disc-btn").forEach(btn => {
     btn.addEventListener("click", () => {
         document.getElementById("discount").value = btn.dataset.val;
@@ -80,7 +99,8 @@ document.querySelectorAll(".disc-btn").forEach(btn => {
     });
 });
 
-// Share (WhatsApp-first)
+/* ================= SHARE IMAGE ================= */
+
 async function shareImage() {
     const card = document.getElementById("priceCard");
     const canvas = await html2canvas(card, { scale: 3 });
@@ -104,5 +124,6 @@ async function shareImage() {
     });
 }
 
-// Auto fetch on load
+/* ================= AUTO FETCH ON LOAD ================= */
+
 fetchPrice();
