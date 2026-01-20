@@ -111,3 +111,10 @@ button {
     opacity: 0.8;
     text-align: left;
 }
+
+.timeRow {
+    margin-top: 4px;
+    font-size: 14px;
+    opacity: 0.75;
+    text-align: left;
+}
