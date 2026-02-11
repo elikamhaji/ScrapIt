@@ -55,7 +55,7 @@ async function fetchPrice() {
         document.getElementById("goldPrice").value = data.price.toFixed(2);
         updateList();
 
-        // Timestamp updates ONLY when price is fetched
+        // Update timestamp ONLY when price is fetched
         document.getElementById("timeStamp").innerText = getFormattedTimestamp();
 
     } catch (e) {
@@ -86,7 +86,12 @@ function updateList() {
         list.appendChild(row);
     });
 
-    const refCode = `Ref#9${Math.floor(oz)}${Math.floor(discount - 30)}`;
+    /* ===== DECIMAL-SAFE REF LOGIC ===== */
+
+    const ozPart = Math.floor(oz);
+    const discountPart = (discount - 30).toString();
+
+    const refCode = `Ref#9${ozPart}${discountPart}`;
     refDisplay.innerText = refCode;
 }
 
